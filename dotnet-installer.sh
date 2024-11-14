@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # A wrapper over dotnet-install.sh script
 
 function installDotnet () {
