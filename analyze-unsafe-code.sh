@@ -37,7 +37,7 @@ git fetch origin pull/$GH_PR_ID/head:PR_BRANCH_$GH_PR_ID && git switch PR_BRANCH
 popd
 
 pushd UnsafeCodeAnalyzer
-dotnet run -c Release -v q -- ../runtime ../pr.md -quite > ../after.txt
+dotnet run -c Release -v q -- ../runtime ../after.md -quite > ../after.txt
 popd
 
 echo ""
