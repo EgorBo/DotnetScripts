@@ -9,10 +9,22 @@ chmod +x dotnet-installer.sh
 source dotnet-installer.sh
 installDotnet 8.0
 installDotnet 9.0
-#
 
-git clone --no-tags --single-branch --quiet https://github.com/dotnet/runtime.git
-git clone --no-tags --single-branch --quiet https://github.com/EgorBo/UnsafeCodeAnalyzer.git
+if [ ! -d "runtime" ]; then
+  git clone --no-tags --single-branch --quiet
+else
+    pushd runtime
+    git fetch origin && git checkout main && git pull
+    popd
+fi
+
+if [ ! -d "UnsafeCodeAnalyzer" ]; then
+  git clone --no-tags --single-branch --quiet
+else
+    pushd UnsafeCodeAnalyzer
+    git fetch origin && git checkout main && git pull
+    popd
+fi
 
 pushd UnsafeCodeAnalyzer
 dotnet build -c Release
@@ -21,9 +33,7 @@ popd
 
 pushd runtime
 # Fetch PR
-git fetch origin pull/$GH_PR_ID/head:PR_BRANCH
-git switch PR_BRANCH
-git clean -ffddxx # Remove all untracked files and directories
+git fetch origin pull/$GH_PR_ID/head:PR_BRANCH_$GH_PR_ID && git switch PR_BRANCH_$GH_PR_ID && git clean -ffddxx
 popd
 
 pushd UnsafeCodeAnalyzer
