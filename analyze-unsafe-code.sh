@@ -22,7 +22,10 @@ if [ ! -d "UnsafeCodeAnalyzer" ]; then
   git clone --no-tags --single-branch --quiet https://github.com/EgorBo/UnsafeCodeAnalyzer.git
 else
     pushd UnsafeCodeAnalyzer
-    git fetch origin && git checkout main && git pull origin main && git clean -ffddxx
+    git fetch origin
+    git checkout main
+    git pull origin main
+    git clean -ffddxx
     popd
 fi
 
@@ -33,7 +36,14 @@ popd
 
 pushd runtime
 # Fetch PR
-git fetch origin pull/$GH_PR_ID/head:PR_BRANCH_$GH_PR_ID && git switch PR_BRANCH_$GH_PR_ID && git clean -ffddxx
+CURRENT_MAIN=$(git rev-parse HEAD)
+git fetch origin pull/$GH_PR_ID/head:PR_BRANCH_$GH_PR_ID
+git switch PR_BRANCH_$GH_PR_ID
+git clean -ffddxx
+# Now rebase pr to the latest main
+git pull origin main
+git reset --hard $CURRENT_MAIN # just a workaround to fix a possible race condition
+git clean -ffddxx
 popd
 
 pushd UnsafeCodeAnalyzer
