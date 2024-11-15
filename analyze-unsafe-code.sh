@@ -14,7 +14,7 @@ if [ ! -d "runtime" ]; then
   git clone --no-tags --single-branch --quiet https://github.com/dotnet/runtime.git
 else
     pushd runtime
-    git fetch origin && git checkout main && git pull && git clean -ffddxx
+    git fetch origin && git checkout main && git pull origin main && git clean -ffddxx
     popd
 fi
 
@@ -22,7 +22,7 @@ if [ ! -d "UnsafeCodeAnalyzer" ]; then
   git clone --no-tags --single-branch --quiet https://github.com/EgorBo/UnsafeCodeAnalyzer.git
 else
     pushd UnsafeCodeAnalyzer
-    git fetch origin && git checkout main && git pull && git clean -ffddxx
+    git fetch origin && git checkout main && git pull origin main && git clean -ffddxx
     popd
 fi
 
