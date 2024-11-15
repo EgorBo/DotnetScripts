@@ -16,7 +16,7 @@ git clone --no-tags --single-branch --quiet https://github.com/EgorBo/UnsafeCode
 
 pushd UnsafeCodeAnalyzer
 dotnet build -c Release
-dotnet run -c Release -v q -- ../runtime base.csv -quite > ../base.txt
+dotnet run -c Release -v q -- ../runtime before.csv -quite > ../before.txt
 popd
 
 pushd runtime
@@ -27,20 +27,20 @@ git clean -ffddxx # Remove all untracked files and directories
 popd
 
 pushd UnsafeCodeAnalyzer
-dotnet run -c Release -v q -- ../runtime pr.csv -quite > ../pr.txt
+dotnet run -c Release -v q -- ../runtime pr.csv -quite > ../after.txt
 popd
 
 echo ""
 echo "------"
 echo "Base results:"
-echo "$(cat base.txt)"
+echo "$(cat before.txt)"
 echo "------"
 echo "PR results:"
-echo "$(cat pr.txt)"
+echo "$(cat after.txt)"
 
 
 if [ -z "$EGORBOT_SERVER" ]; then
   echo "EGORBOT_SERVER is not set. Skipping sending results to the server."
   exit 0
 fi
-curl -X POST -H "Content-Type: application/json" -d '{"PrNum": $GITHUB_PR,  "Before": "$(cat base.txt)", "After": "$(cat pr.txt)"}' $EGORBOT_SERVER
+curl -k -X POST $EGORBOT_SERVER?prNum=$GITHUB_PR -F "file=@before.txt" -F "file=@after.txt"
