@@ -9,8 +9,8 @@ installDotnet 8.0
 installDotnet 9.0
 #
 
-git clone https://github.com/dotnet/runtime.git
-git clone https://github.com/EgorBo/UnsafeCodeAnalyzer.git
+git clone --no-tags --single-branch --quiet https://github.com/dotnet/runtime.git
+git clone --no-tags --single-branch --quiet https://github.com/EgorBo/UnsafeCodeAnalyzer.git
 
 pushd UnsafeCodeAnalyzer
 dotnet build
