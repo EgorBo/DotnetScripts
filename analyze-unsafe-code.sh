@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 : ${GITHUB_PR:="108365"} # PR to analyze
 
@@ -6,7 +6,7 @@
 wget -O dotnet-installer.sh \
 https://raw.githubusercontent.com/EgorBo/DotnetScripts/refs/heads/main/dotnet-installer.sh && \
 chmod +x dotnet-installer.sh
-. dotnet-installer.sh
+source dotnet-installer.sh
 installDotnet 8.0
 installDotnet 9.0
 #
