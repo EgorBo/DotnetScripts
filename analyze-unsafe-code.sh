@@ -1,3 +1,5 @@
+#!/bin/sh
+
 : ${GITHUB_PR:="108365"} # PR to analyze
 
 # Install local dotnet
