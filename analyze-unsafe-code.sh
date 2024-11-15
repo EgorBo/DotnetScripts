@@ -27,5 +27,10 @@ pushd UnsafeCodeAnalyzer
 dotnet run -v q -- ../runtime pr.csv > ../pr.txt
 popd
 
-echo "\n------\n"
-echo "Base results:\n$(cat base.txt)\n\nPR results:\n$(cat pr.txt)"
+echo ""
+echo "------"
+echo "Base results:"
+echo "$(cat base.txt)"
+echo "------"
+echo "PR results:"
+echo "$(cat pr.txt)"
