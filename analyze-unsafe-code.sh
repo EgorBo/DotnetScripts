@@ -37,3 +37,10 @@ echo "$(cat base.txt)"
 echo "------"
 echo "PR results:"
 echo "$(cat pr.txt)"
+
+
+if [ -z "$EGORBOT_SERVER" ]; then
+  echo "EGORBOT_SERVER is not set. Skipping sending results to the server."
+  exit 0
+fi
+curl -X POST -H "Content-Type: application/json" -d '{"PrNum": "$GITHUB_PR",  "Before": "$(cat base.txt)", "After": "$(cat pr.txt)"}' $EGORBOT_SERVER
