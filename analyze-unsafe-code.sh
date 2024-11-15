@@ -16,7 +16,7 @@ git clone --no-tags --single-branch --quiet https://github.com/EgorBo/UnsafeCode
 
 pushd UnsafeCodeAnalyzer
 dotnet build
-dotnet run -v q -- ../runtime base.csv > ../base.txt
+dotnet run -c Release -v q -- ../runtime base.csv > ../base.txt
 popd
 
 pushd runtime
@@ -27,7 +27,7 @@ git clean -ffddxx # Remove all untracked files and directories
 popd
 
 pushd UnsafeCodeAnalyzer
-dotnet run -v q -- ../runtime pr.csv > ../pr.txt
+dotnet run -c Release -v q -- ../runtime pr.csv > ../pr.txt
 popd
 
 echo ""
