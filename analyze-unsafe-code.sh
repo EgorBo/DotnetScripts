@@ -16,7 +16,7 @@ git clone --no-tags --single-branch --quiet https://github.com/EgorBo/UnsafeCode
 
 pushd UnsafeCodeAnalyzer
 dotnet build -c Release
-dotnet run -c Release -v q -- ../runtime before.csv -quite > ../before.txt
+dotnet run -c Release -v q -- ../runtime ../before.md -quite > ../before.txt
 popd
 
 pushd runtime
@@ -27,7 +27,7 @@ git clean -ffddxx # Remove all untracked files and directories
 popd
 
 pushd UnsafeCodeAnalyzer
-dotnet run -c Release -v q -- ../runtime pr.csv -quite > ../after.txt
+dotnet run -c Release -v q -- ../runtime ../pr.md -quite > ../after.txt
 popd
 
 echo ""
@@ -43,4 +43,4 @@ if [ -z "$EGORBOT_SERVER" ]; then
   echo "EGORBOT_SERVER is not set. Skipping sending results to the server."
   exit 0
 fi
-curl -k -X POST $EGORBOT_SERVER?jobId=$EGORBOT_JOBID -F "file=@before.txt" -F "file=@after.txt"
+curl -k -X POST $EGORBOT_SERVER?jobId=$EGORBOT_JOBID -F "file=@before.md" -F "file=@after.md"
