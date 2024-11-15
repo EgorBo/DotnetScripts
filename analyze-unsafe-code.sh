@@ -43,4 +43,4 @@ if [ -z "$EGORBOT_SERVER" ]; then
   echo "EGORBOT_SERVER is not set. Skipping sending results to the server."
   exit 0
 fi
-curl -X POST -H "Content-Type: application/json" -d '{"PrNum": "$GITHUB_PR",  "Before": "$(cat base.txt)", "After": "$(cat pr.txt)"}' $EGORBOT_SERVER
+curl -X POST -H "Content-Type: application/json" -d '{"PrNum": $GITHUB_PR,  "Before": "$(cat base.txt)", "After": "$(cat pr.txt)"}' $EGORBOT_SERVER
