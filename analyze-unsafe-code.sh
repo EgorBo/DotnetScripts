@@ -1,6 +1,6 @@
 #!/bin/bash
 
-: ${GITHUB_PR:="108365"} # PR to analyze
+: ${GH_PR_ID:="108365"} # PR to analyze
 
 # Install local dotnet
 wget -O dotnet-installer.sh \
@@ -21,7 +21,7 @@ popd
 
 pushd runtime
 # Fetch PR
-git fetch origin pull/$GITHUB_PR/head:PR_BRANCH
+git fetch origin pull/$GH_PR_ID/head:PR_BRANCH
 git switch PR_BRANCH
 git clean -ffddxx # Remove all untracked files and directories
 popd
@@ -43,4 +43,4 @@ if [ -z "$EGORBOT_SERVER" ]; then
   echo "EGORBOT_SERVER is not set. Skipping sending results to the server."
   exit 0
 fi
-curl -k -X POST $EGORBOT_SERVER?prNum=$GITHUB_PR -F "file=@before.txt" -F "file=@after.txt"
+curl -k -X POST $EGORBOT_SERVER?jobId=$EGORBOT_JOBID -F "file=@before.txt" -F "file=@after.txt"
