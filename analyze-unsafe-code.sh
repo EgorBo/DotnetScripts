@@ -1,6 +1,6 @@
 #!/bin/bash
 
-: ${GH_PR_ID:="108365"} # PR to analyze
+: ${GH_PR_ID:="109896"} # PR to analyze
 
 # Install local dotnet
 wget -O dotnet-installer.sh \
@@ -29,35 +29,20 @@ else
     popd
 fi
 
-pushd UnsafeCodeAnalyzer
-dotnet build -c Release
-dotnet run -c Release -v q -- ../runtime ../before.md -quite > ../before.txt
-popd
+dotnet run -c Release --project UnsafeCodeAnalyzer/src/UnsafeCodeAnalyzer.csproj -- --dir runtime --report before.md --preset DotnetRuntimeRepo
 
 pushd runtime
 # Fetch PR
 CURRENT_MAIN=$(git rev-parse HEAD)
-git fetch origin pull/$GH_PR_ID/head:PR_BRANCH_$GH_PR_ID
-git switch PR_BRANCH_$GH_PR_ID
+BRANCH_NAME=PR_BRANCH_$GH_PR_ID_$RANDOM
+git fetch origin pull/$GH_PR_ID/head:${BRANCH_NAME}
+git switch ${BRANCH_NAME}
 git clean -ffddxx
-# Now rebase pr to the latest main
-git pull origin main
-git reset --hard $CURRENT_MAIN # just a workaround to fix a possible race condition
+git rebase --onto $CURRENT_MAIN main
 git clean -ffddxx
 popd
 
-pushd UnsafeCodeAnalyzer
-dotnet run -c Release -v q -- ../runtime ../after.md -quite > ../after.txt
-popd
-
-echo ""
-echo "------"
-echo "Base results:"
-echo "$(cat before.txt)"
-echo "------"
-echo "PR results:"
-echo "$(cat after.txt)"
-
+dotnet run -c Release --project UnsafeCodeAnalyzer/src/UnsafeCodeAnalyzer.csproj -- --dir runtime --report after.md --preset DotnetRuntimeRepo
 
 if [ -z "$EGORBOT_SERVER" ]; then
   echo "EGORBOT_SERVER is not set. Skipping sending results to the server."
