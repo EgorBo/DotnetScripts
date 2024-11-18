@@ -38,16 +38,10 @@ BRANCH_NAME=PR_BRANCH_$GH_PR_ID_$RANDOM
 git fetch origin pull/$GH_PR_ID/head:${BRANCH_NAME}
 git switch ${BRANCH_NAME}
 git clean -ffddxx
-git rebase --onto $CURRENT_MAIN main
+git rebase --onto $CURRENT_MAIN main || true
 git clean -ffddxx
 popd
 
 dotnet run -c Release --project UnsafeCodeAnalyzer/src/UnsafeCodeAnalyzer.csproj -- analyze --dir runtime --report after.md --preset DotnetRuntimeRepo
-
-dotnet run -c Release --project UnsafeCodeAnalyzer/src/UnsafeCodeAnalyzer.csproj -- compare --base before.md --diff after.md --output report.md
-
-if [ -z "$EGORBOT_SERVER" ]; then
-  echo "EGORBOT_SERVER is not set. Skipping sending results to the server."
-  exit 0
-fi
-curl -k -X POST $EGORBOT_SERVER?jobId=$EGORBOT_JOBID -F "file=@report.md"
+dotnet run -c Release --project UnsafeCodeAnalyzer/src/UnsafeCodeAnalyzer.csproj -- compare --base before.md --diff after.md --output report_changes.md --only-changes true
+dotnet run -c Release --project UnsafeCodeAnalyzer/src/UnsafeCodeAnalyzer.csproj -- compare --base before.md --diff after.md --output report_full.md --only-changes false
