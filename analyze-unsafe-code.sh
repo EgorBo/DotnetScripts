@@ -29,7 +29,7 @@ else
     popd
 fi
 
-dotnet run -c Release --project UnsafeCodeAnalyzer/src/UnsafeCodeAnalyzer.csproj -- --dir runtime --report before.md --preset DotnetRuntimeRepo
+dotnet run -c Release --project UnsafeCodeAnalyzer/src/UnsafeCodeAnalyzer.csproj -- analyze --dir runtime --report before.md --preset DotnetRuntimeRepo
 
 pushd runtime
 # Fetch PR
@@ -42,10 +42,12 @@ git rebase --onto $CURRENT_MAIN main
 git clean -ffddxx
 popd
 
-dotnet run -c Release --project UnsafeCodeAnalyzer/src/UnsafeCodeAnalyzer.csproj -- --dir runtime --report after.md --preset DotnetRuntimeRepo
+dotnet run -c Release --project UnsafeCodeAnalyzer/src/UnsafeCodeAnalyzer.csproj -- analyze --dir runtime --report after.md --preset DotnetRuntimeRepo
+
+dotnet run -c Release --project UnsafeCodeAnalyzer/src/UnsafeCodeAnalyzer.csproj -- compare --base before.md --diff after.md --output report.md
 
 if [ -z "$EGORBOT_SERVER" ]; then
   echo "EGORBOT_SERVER is not set. Skipping sending results to the server."
   exit 0
 fi
-curl -k -X POST $EGORBOT_SERVER?jobId=$EGORBOT_JOBID -F "file=@before.md" -F "file=@after.md"
+curl -k -X POST $EGORBOT_SERVER?jobId=$EGORBOT_JOBID -F "file=@report.md"
